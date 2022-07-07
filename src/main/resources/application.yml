@@ -1,3 +1,22 @@
 spring:
   application:
     name: producer-api
+
+cloud:
+  aws:
+    credentials:
+      accessKey: # access-key ??? ??
+      secretKey: # secret-key ??? ??
+      use-default-aws-credentials-chain: true
+    region:
+      static: ap-northeast-2 # ?? ???? ap-northeast-2
+    stack:
+      auto: false
+
+sqs:
+  fifo.queue:
+    url: # AWS FIFO Queue URL? ??
+    message:
+      group.id: sample
+  queue:
+    url: # AWS Queue URL? ??
