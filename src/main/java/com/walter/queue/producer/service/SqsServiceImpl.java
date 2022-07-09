@@ -32,14 +32,14 @@ public class SqsServiceImpl implements SqsService {
 	}
 
 	@Override
-	public Result simpleSendByQueueMessagingTemplate(String message) {
+	public Result simpleSendMessageByQueueMessagingTemplate(String message) {
 		final Message<String> sqsMessage = MessageBuilder.withPayload(message).build();
 		queueMessagingTemplate.send(queueUrl, sqsMessage);
 		return Result.OK;
 	}
 
 	@Override
-	public Result sendForFifoQueue(String message) {
+	public Result sendMessageForFifoQueue(String message) {
 		final SendMessageRequest request = new SendMessageRequest()
 				.withQueueUrl(fifoQueueUrl)
 				.withMessageGroupId(messageGroupId)
