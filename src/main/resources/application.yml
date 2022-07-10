@@ -4,7 +4,6 @@ spring:
   kafka:
     producer:
       bootstrap-servers: # Kafka Broker의 서버 정보를 설정
-      topic: # 전송 대상 Kafka Topic을 기입
 
 cloud:
   aws:
@@ -19,7 +18,7 @@ cloud:
 
 sqs:
   queue:
-    url: # AWS Queue URL을 기입
+    url: # AWS Queue URL을 기입, ex) https://sqs.ap-northeast2.amazonaws.com/{aws account 번호}/
     message:
       group:
         id: sample
