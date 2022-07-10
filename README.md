@@ -22,6 +22,7 @@ application.yml에 아래의 내용을 기입합니다.
 * `cloud.aws.region.static` : AWS 리전을 기입 (서울이면 ap-northeast-2 입니다)
 * `sqs.queue.url` : AWS Queue의 URL 
   * ex) _https://sqs.ap-northeast2.amazonaws.com/{aws account 번호}/_
+* `sqs.queue.message.group.id` : FIFO Queue 에 송신하려면 Message Group ID의 설정이 필요합니다. 쓰고 싶은 이름을 설정합니다.
 
 Service의 Test 클래스에서 테스트용 Queue, Topic 이름이 임의 지정되어 있는데 실제 이름으로 수정합니다.
 * `com.walter.queue.producer.service.KafkaTransferServiceTest.java`의 17 line
