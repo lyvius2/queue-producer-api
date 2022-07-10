@@ -2,7 +2,6 @@ package com.walter.queue.producer.service;
 
 import com.walter.queue.producer.response.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -11,21 +10,17 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Slf4j
 @Service
-public class KafkaServiceImpl implements KafkaService {
-
-	@Value("${spring.kafka.producer.topic:}")
-	private String topic;
-
+public class KafkaTransferService implements TransferService {
 	private final KafkaTemplate kafkaTemplate;
 
-	public KafkaServiceImpl(KafkaTemplate kafkaTemplate) {
+	public KafkaTransferService(KafkaTemplate kafkaTemplate) {
 		this.kafkaTemplate = kafkaTemplate;
 	}
 
 	@Override
-	public Result sendMessage(String message) {
+	public Result sendMessage(String topic, String message) {
 		final ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, message);
-		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+		future.addCallback(new ListenableFutureCallback<>() {
 			@Override
 			public void onFailure(Throwable ex) {
 				ex.printStackTrace();
@@ -34,7 +29,7 @@ public class KafkaServiceImpl implements KafkaService {
 
 			@Override
 			public void onSuccess(SendResult<String, String> result) {
-				log.info("Kafka sent message='{}'", message);
+				log.info("Kafka sent message='{}', topic={}", message, topic);
 			}
 		});
 		return Result.OK;

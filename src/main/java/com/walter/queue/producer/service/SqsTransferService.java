@@ -14,34 +14,38 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class SqsServiceImpl implements SqsService {
+public class SqsTransferService implements TransferService {
 
 	@Value("${sqs.queue.url:}")
 	private String queueUrl;
-	@Value("${sqs.fifo.queue.url:}")
-	private String fifoQueueUrl;
-	@Value("${sqs.fifo.queue.message.group.id:}")
+	@Value("${sqs.queue.message.group.id:}")
 	private String messageGroupId;
 
 	private final AmazonSQS amazonSQS;
 	private final QueueMessagingTemplate queueMessagingTemplate;
 
-	public SqsServiceImpl(AmazonSQS amazonSQS, QueueMessagingTemplate queueMessagingTemplate) {
+	public SqsTransferService(AmazonSQS amazonSQS, QueueMessagingTemplate queueMessagingTemplate) {
 		this.amazonSQS = amazonSQS;
 		this.queueMessagingTemplate = queueMessagingTemplate;
 	}
 
 	@Override
-	public Result simpleSendMessageByQueueMessagingTemplate(String message) {
+	public Result sendMessage(String queue, String message) {
+		if (StringUtils.contains(queue.toLowerCase(), ".fifo")) {
+			return sendMessageToFifoQueue(queue, message);
+		}
+		return simpleSendMessage(queue, message);
+	}
+
+	private Result simpleSendMessage(String queue, String message) {
 		final Message<String> sqsMessage = MessageBuilder.withPayload(message).build();
-		queueMessagingTemplate.send(queueUrl, sqsMessage);
+		queueMessagingTemplate.send(queueUrl + queue, sqsMessage);
 		return Result.OK;
 	}
 
-	@Override
-	public Result sendMessageForFifoQueue(String message) {
+	private Result sendMessageToFifoQueue(String queue, String message) {
 		final SendMessageRequest request = new SendMessageRequest()
-				.withQueueUrl(fifoQueueUrl)
+				.withQueueUrl(queueUrl + queue)
 				.withMessageGroupId(messageGroupId)
 				.withMessageDeduplicationId(UUID.randomUUID().toString())
 				.withMessageBody(message);

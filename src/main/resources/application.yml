@@ -18,9 +18,8 @@ cloud:
       auto: false
 
 sqs:
-  fifo.queue:
-    url: # AWS FIFO Queue URL을 기입
-    message:
-      group.id: sample
   queue:
     url: # AWS Queue URL을 기입
+    message:
+      group:
+        id: sample

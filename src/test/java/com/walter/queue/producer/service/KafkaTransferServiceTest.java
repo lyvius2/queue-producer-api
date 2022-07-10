@@ -9,16 +9,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
-class KafkaServiceImplTest {
+class KafkaTransferServiceTest {
 	@Autowired
-	KafkaService kafkaService;
+	KafkaTransferService kafkaTransferService;
 
 	private final String message = "Test Message.";
+	private final String topic = "test-topic";
 
 	@Test
 	@DisplayName("Kafka Topic에 메시지 보내기, 성공하면 isError = false, 실패하면 isError = true")
 	void sendMessage_Test() {
-		final Result result = kafkaService.sendMessage(message);
+		final Result result = kafkaTransferService.sendMessage(topic, message);
 		assertFalse(result.isError());
 	}
 }
